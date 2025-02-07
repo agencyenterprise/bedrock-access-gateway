@@ -623,15 +623,15 @@ class CustomImportModel(BedrockModel):
             return "unknown"
 
     def get_message_text(self, response_body: dict) -> str:
-        return response_body["outputs"][0]["text"]
+        return response_body["generation"]
 
     def get_message_finish_reason(self, response_body: dict) -> str:
-        return response_body["outputs"][0]["stop_reason"]
+        return response_body["stop_reason"]
 
     def get_message_usage(self, response_body: dict) -> tuple[int, int]:
-        # 현재 응답에 usage 정보가 없으므로, 임시로 0, 0을 반환합니다.
-        # 실제 usage 정보가 제공된다면 이 부분을 수정해야 합니다.
-        return 0, 0
+        input_tokens = int(response_body.get("prompt_token_count", "0"))
+        output_tokens = int(response_body.get("generation_token_count", "0"))
+        return input_tokens, output_tokens
 
 
 class LlamaModel(BedrockModel):
