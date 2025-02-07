@@ -6,7 +6,7 @@ OpenAI-compatible RESTful APIs for Amazon Bedrock
 
 ## Overview
 
-Amazon Bedrock offers a wide range of foundation models (such as Claude 3 Opus/Sonnet/Haiku, Llama 2/3, Mistral/Mixtral, 
+Amazon Bedrock offers a wide range of foundation models (such as Claude 3 Opus/Sonnet/Haiku, Llama 2/3, Mistral/Mixtral,
 etc.) and a broad set of capabilities for you to build generative AI applications. Check the [Amazon Bedrock](https://aws.amazon.com/bedrock) landing page for additional information.
 
 Sometimes, you might have applications developed using OpenAI APIs or SDKs, and you want to experiment with Amazon Bedrock without modifying your codebase. Or you may simply wish to evaluate the capabilities of these foundation models in tools like AutoGen etc. Well, this repository allows you to access Amazon Bedrock models seamlessly through OpenAI APIs and SDKs, enabling you to test these models without code changes.
@@ -70,11 +70,11 @@ Please follow the steps below to deploy the Bedrock Proxy APIs into your AWS acc
 2. In the left-hand navigation pane, click on "Parameter Store".
 3. Click on the "Create parameter" button.
 4. In the "Create parameter" window, select the following options:
-    - Name: Enter a descriptive name for your parameter (e.g., "BedrockProxyAPIKey").
-    - Description: Optionally, provide a description for the parameter.
-    - Tier: Select **Standard**.
-    - Type: Select **SecureString**.
-    - Value: Any string (without spaces).
+   - Name: Enter a descriptive name for your parameter (e.g., "BedrockProxyAPIKey").
+   - Description: Optionally, provide a description for the parameter.
+   - Tier: Select **Standard**.
+   - Type: Select **SecureString**.
+   - Value: Any string (without spaces).
 5. Click "Create parameter".
 6. Make a note of the parameter name you used (e.g., "BedrockProxyAPIKey"). You'll need this in the next step.
 
@@ -82,13 +82,15 @@ Please follow the steps below to deploy the Bedrock Proxy APIs into your AWS acc
 
 1. Sign in to AWS Management Console, switch to the region to deploy the CloudFormation Stack to.
 2. Click the following button to launch the CloudFormation Stack in that region. Choose one of the following:
+
    - **ALB + Lambda**
 
-      [![Launch Stack](assets/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=BedrockProxyAPI&templateURL=https://raw.githubusercontent.com/didhd/bedrock-access-gateway/main/deployment/BedrockProxy.template)
+     [![Launch Stack](assets/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template?stackName=BedrockProxyAPI&templateURL=https://raw.githubusercontent.com/didhd/bedrock-access-gateway/main/deployment/BedrockProxy.template)
+
 3. Click "Next".
 4. On the "Specify stack details" page, provide the following information:
-    - Stack name: Change the stack name if needed.
-    - ApiKeyParam (if you set up an API key in Step 1): Enter the parameter name you used for storing the API key (e.g., `BedrockProxyAPIKey`). If you did not set up an API key, leave this field blank. Click "Next".
+   - Stack name: Change the stack name if needed.
+   - ApiKeyParam (if you set up an API key in Step 1): Enter the parameter name you used for storing the API key (e.g., `BedrockProxyAPIKey`). If you did not set up an API key, leave this field blank. Click "Next".
 5. On the "Configure stack options" page, you can leave the default settings or customize them according to your needs.
 6. Click "Next".
 7. On the "Review" page, review the details of the stack you're about to create. Check the "I acknowledge that AWS CloudFormation might create IAM resources" checkbox at the bottom.
@@ -217,9 +219,15 @@ Replace the repo url in the CloudFormation template before you deploy.
 
 ### Can I run this locally
 
-Yes, you can run this locally.
+Yes, you can run this locally, e.g. run below command under `src` folder:
 
-The API base url should look like `http://localhost:8000/api/v1`.
+```bash
+cd src/
+pip install -r requirements.txt
+uvicorn api.app:app --host 0.0.0.0 --port 8000
+```
+
+The API base url should look like `http://localhost:8000/api/v1` and the API key should be `bedrock`.
 
 ### Any performance sacrifice or latency increase by using the proxy APIs
 
@@ -237,13 +245,12 @@ Fine-tuned models and models with Provisioned Throughput are currently not suppo
 
 ### How to upgrade?
 
-To use the latest features, you don't need to redeploy the CloudFormation stack. You simply need to pull the latest image. 
+To use the latest features, you don't need to redeploy the CloudFormation stack. You simply need to pull the latest image.
 
 To do so, depends on which version you deployed:
 
 - **Lambda version**: Go to AWS Lambda console, find the Lambda function, then find and click the `Deploy new image` button and click save.
 - **Fargate version**: Go to ECS console, click the ECS cluster, go the `Tasks` tab, select the only task that is running and simply click `Stop selected` menu. A new task with latest image will start automatically.
-
 
 ## Security
 
